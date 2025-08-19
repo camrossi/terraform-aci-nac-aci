@@ -695,7 +695,7 @@ locals {
             description = try(sel.description, "")
           }]
           ip_external_subnet_selectors = [for sel in try(esg.ip_external_subnet_selectors, []) : {
-            value       = sel.value
+            ip       = sel.ip
             description = try(sel.description, "")
             shared      = try(sel.shared, "false")
           }]
