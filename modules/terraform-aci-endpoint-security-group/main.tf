@@ -129,16 +129,11 @@ resource "aci_rest_managed" "fvEPSelector" {
   ]
 }
 
-resource "aci_rest_managed" "fvExternalSubnetSelector" {
-  for_each   = { for ess in var.ip_external_subnet_selectors : "${ess.ip}" => ess }
-  dn         = "${aci_rest_managed.fvESg.dn}/extsubselector-[${each.key}]"
-  class_name = "fvExternalSubnetSelector"
+resource "aci_rest_managed" "fvRemoteSGT" {
+  count      = var.normalized_pctag != null ? 1 : 0
+  dn         = "${aci_rest_managed.fvESg.dn}/remotesgt"
+  class_name = "fvRemoteSGT"
   content = {
-    descr           = each.value.description
-    shared          = each.value.shared == true ? "yes" : "no"
+    remotePcTag = var.normalized_pctag
   }
-
-  depends_on = [
-    aci_rest_managed.fvRsScope,
-  ]
 }
